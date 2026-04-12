@@ -4,14 +4,15 @@ import json
 
 class HttpClient():
     def __init__(self, base_url, headers=None, timeout=3):
-        self.base_url = base_url
         self.timeout = timeout
         self.session = requests.Session()
 
         if headers:
-            self.session.headers.update
+            self.session.headers.update(headers)
         if not base_url:
             raise ValueError("URL не может быть пустой")
+        self.base_url = base_url
+
                 
     def get(self, endpoint):
         url = f"{self.base_url}{endpoint}"
@@ -58,9 +59,12 @@ class HttpClient():
 
         allure.attach(url, name="URL", attachment_type=allure.attachment_type.TEXT)
         allure.attach(str(response.status_code), name="Status code", attachment_type=allure.attachment_type.TEXT)
-        allure.attach(
-            json.dumps(response.json(), indent=2),
-            name="Response body",
-            attachment_type=allure.attachment_type.JSON
-        )
+        try:
+            allure.attach(
+                json.dumps(response.json(), indent=2),
+                name="Response body",
+                attachment_type=allure.attachment_type.JSON
+                )
+        except (TypeError, ValueError):
+            pass
         return response
