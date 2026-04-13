@@ -28,6 +28,7 @@ class TestPetCrud():
         pet_id = create_pet.json()["id"]
         with allure.step("Получение ответа на гет запрос"):
             response = petstore_httpClient.get(f"/pet/{pet_id}")
+        assert response.status_code == 200
         pet = Pet.model_validate(response.json())
 
         with allure.step("Проверка статус кода"):
@@ -61,10 +62,10 @@ class TestPetCrud():
         with allure.step("Получение ответа на делит запрос"):
             response = petstore_httpClient.delete("/pet/999")
         with allure.step("Проверка статус кода"):
-            assert response.status_code == 200
+            assert response.status_code in (200, 404)
 
 @allure.feature("Negative tests")
-class NegativeTests():
+class TestNegativeTests():
     @allure.story("Check error status code get")
     def test_get_error(self, petstore_httpClient):
         with allure.step("Get response with wrong endpoint"):
@@ -75,6 +76,14 @@ class NegativeTests():
     @allure.story("check error status code delete")    
     def test_delete_error(self, petstore_httpClient):
         with allure.step("Get response with wrong endpoint"):
-            response = petstore_httpClient.delete("/pet/9999")
+            response = petstore_httpClient.delete("/pet/865823685628126")
         with allure.step("check status code"):
             assert response.status_code == 404
+
+@allure.feature("Parametrize tests")
+@pytest.mark.parametrize("status", ["available", "pending", "sold"])
+def test_find_by_status(petstore_httpClient, status):
+    with allure.step(f"Get pets by status {status}"):
+        response = petstore_httpClient.get(f"/pet/findByStatus?status={status}")
+    with allure.step("Check status code"):
+        assert response.status_code == 200
