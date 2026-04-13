@@ -62,3 +62,19 @@ class TestPetCrud():
             response = petstore_httpClient.delete("/pet/999")
         with allure.step("Проверка статус кода"):
             assert response.status_code == 200
+
+@allure.feature("Negative tests")
+class NegativeTests():
+    @allure.story("Check error status code get")
+    def test_get_error(self, petstore_httpClient):
+        with allure.step("Get response with wrong endpoint"):
+            response = petstore_httpClient.get("/pet/9999")
+        with allure.step("check status code"):
+            assert response.status_code == 404
+
+    @allure.story("check error status code delete")    
+    def test_delete_error(self, petstore_httpClient):
+        with allure.step("Get response with wrong endpoint"):
+            response = petstore_httpClient.delete("/pet/9999")
+        with allure.step("check status code"):
+            assert response.status_code == 404
