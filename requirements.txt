@@ -3,3 +3,4 @@ pytest
 pydantic
 allure-pytest
 pytest-mock
+faker
