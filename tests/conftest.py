@@ -2,11 +2,12 @@ import pytest
 from utils.http_client import HttpClient
 from faker import Faker
 import random
+import os
 
 @pytest.fixture(scope="session")
 def petstore_httpClient():
     return HttpClient(
-        base_url = "https://petstore.swagger.io/v2", 
+        base_url = os.getenv("BASE_URL", "https://petstore.swagger.io/v2"), 
         headers={"content-type": "application/json"}
         )
 
