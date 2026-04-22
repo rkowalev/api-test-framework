@@ -9,3 +9,4 @@ allure-report/
 *.egg-info/
 dist/
 build/
+playwright_learn.py/

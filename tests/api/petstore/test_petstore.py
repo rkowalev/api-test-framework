@@ -88,3 +88,13 @@ def test_find_by_status(petstore_httpClient, status):
         response = petstore_httpClient.get(f"/pet/findByStatus?status={status}")
     with allure.step("Check status code"):
         assert response.status_code == 200
+
+@allure.feature("Mock tests")
+def test_server_error(mocker, petstore_httpClient):
+    mock_get = mocker.patch("requests.Session.get")
+    mock_get.return_value.status_code = 500
+    mock_get.return_value.json.return_value = {"error": "Internal Server Error"}
+
+    response = petstore_httpClient.get("/pet/1")
+    with allure.step("Check status code"):
+        assert response.status_code == 500
