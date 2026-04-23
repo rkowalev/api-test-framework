@@ -48,26 +48,52 @@ from playwright.sync_api import sync_playwright
 
 #     browser.close()
 
-from playwright.sync_api import sync_playwright
+# with sync_playwright() as p:
+#     browser = p.chromium.launch(headless=False, slow_mo=1000)
+#     context = browser.new_context()
+#     page = context.new_page()
+
+#     page.goto("https://demo.playwright.dev/todomvc")
+
+#     # Добавить задачу
+#     todo_input = page.get_by_placeholder("What needs to be done?")
+#     todo_input.fill("Learn Playwright")
+#     todo_input.press("Enter")
+
+#     # Добавить ещё две
+#     todo_input.fill("Buy groceries")
+#     todo_input.press("Enter")
+
+#     todo_input.fill("Call mom")
+#     todo_input.press("Enter")
+
+#     input("Посмотри на браузер и нажми Enter для закрытия...")
+#     browser.close()
+
+#     from playwright.sync_api import sync_playwright
+
+# Сайт где кнопка появляется через 2 секунды после загрузки
+from playwright.sync_api import sync_playwright, expect
+
+URL = "https://the-internet.herokuapp.com/dynamic_loading/1"
 
 with sync_playwright() as p:
-    browser = p.chromium.launch(headless=False, slow_mo=1000)
+    browser = p.chromium.launch(headless=False, slow_mo=300)
     context = browser.new_context()
     page = context.new_page()
 
-    page.goto("https://demo.playwright.dev/todomvc")
+    page.goto(URL)
+    page.get_by_role("button", name="Start").click()
 
-    # Добавить задачу
-    todo_input = page.get_by_placeholder("What needs to be done?")
-    todo_input.fill("Learn Playwright")
-    todo_input.press("Enter")
+    hello = page.get_by_text("Hello World!")
+    
+    # is_visible() — мгновенная проверка видимости, БЕЗ auto-wait
+    print(f"Видим ли до ожидания: {hello.is_visible()}")   # False (спиннер крутится)
 
-    # Добавить ещё две
-    todo_input.fill("Buy groceries")
-    todo_input.press("Enter")
+    # expect.to_be_visible() — ждёт появления видимости, auto-wait
+    expect(hello).to_be_visible(timeout=10_000)
+    
+    print(f"Видим ли после ожидания: {hello.is_visible()}")  # True
 
-    todo_input.fill("Call mom")
-    todo_input.press("Enter")
-
-    input("Посмотри на браузер и нажми Enter для закрытия...")
+    input("Enter для закрытия...")
     browser.close()
