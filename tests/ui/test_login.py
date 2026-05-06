@@ -1,5 +1,8 @@
 from playwright.sync_api import Page, expect
+import pytest
 import re
+
+pytestmark = pytest.mark.ui
 
 def test_login_with_valid_credentials(login_page, secure_area_page):
     login_page.open()

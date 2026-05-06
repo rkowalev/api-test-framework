@@ -4,6 +4,8 @@ from models.pet import Pet
 import json
 from tests.conftest import generate_random_data
 
+pytestmark = pytest.mark.api
+
 @allure.feature("Pet tests CRUD")
 class TestPetCrud():
     @allure.story("Pet Post test")

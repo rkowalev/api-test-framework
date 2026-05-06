@@ -1,4 +1,7 @@
 from playwright.sync_api import Page, expect
+import pytest
+
+pytestmark = pytest.mark.ui
 
 def test_add_single_todo(todo_page):
     todo_page.open()
