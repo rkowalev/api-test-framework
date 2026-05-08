@@ -80,9 +80,9 @@ pytest --alluredir=allure-results
 allure serve allure-results
 ```
 
-### Docker
+### Docker (API tests)
 
-# Or build and run manually
+```bash
 docker build -t qa-tests .
 docker run --rm qa-tests pytest -m api
 ```
